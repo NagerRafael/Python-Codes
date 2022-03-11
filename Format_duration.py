@@ -1,22 +1,36 @@
-times = [("year", 365 * 24 * 60 * 60), 
-         ("day", 24 * 60 * 60),
-         ("hour", 60 * 60),
-         ("minute", 60),
-         ("second", 1)]
-
 def format_duration(seconds):
-
-    if not seconds:
-        return "now"
-
-    chunks = []
-    for name, secs in times:
-        qty = seconds // secs
-        if qty:
-            if qty > 1:
-                name += "s"
-            chunks.append(str(qty) + " " + name)
-
-        seconds = seconds % secs
-
-    return ', '.join(chunks[:-1]) + ' and ' + chunks[-1] if len(chunks) > 1 else chunks[0]
+    if seconds != 0:
+        time = dict(second = seconds)
+        x = 0
+        y = 0
+        if seconds >= 60:
+            time['second'] = y = int(seconds % 60)
+            time['minute'] = x = int(seconds / 60)
+            if x >= 60:
+                y = x
+                time['minute'] = y = y % 60
+                time['hour']   = x = int(x / 60)
+                if x >= 24:
+                    y = x
+                    time['hour'] = y = y % 24
+                    time['day']  = x = int(x / 24)
+                    if x >= 365:
+                        y = x
+                        time['day']  = y = y % 365
+                        time['year'] = x = int(x / 365)
+        result = []
+        for k in time.keys():
+            v = time[k]
+            if v > 0:
+                if v == 1:
+                    result.append('1 ' + k)
+                else:
+                    result.append(str(v) +' '+ k + 's')
+        result = result[::-1]
+        if len(result) > 1:
+            result = ', '.join(result[0:-1]) + " and "+ result[-1]
+        else:
+            result = ''.join(result)
+    else:
+        result = 'now'
+    return result
