@@ -11,12 +11,9 @@ def parse_int(string):
                 return num[n]
         return None
     
-    print(string)
     sum = 0
     carrion = 1
     for x in string:
-        print(x)
-        print('carrion_i: '+str(carrion))
         if ((x == 'hundred') & ((sum > 1000) | (carrion == 1000))):
             carrion = 100000
         elif (x == 'hundred') & (sum < 1000):
@@ -26,22 +23,16 @@ def parse_int(string):
         elif x == 'million':
             carrion = 1000000
         elif '-' in x:
-            print('-')
             dec = x.split('-')
             sum += (ident(dec[0]) * 10 + ident(dec[1])) * carrion
             carrion = 1
         elif 'teen' in x:
-            print('teen')
             sum += (ident(x) + 10) * carrion
             carrion = 1
         elif 'ty' in x:
-            print('ty')
             sum += (ident(x) * 10) * carrion
             carrion = 1
         elif ident(x):
-            print('solo')
             sum += ident(x) * carrion
             carrion = 1
-        print('carrion_f: '+str(carrion))
-        print('sum: '+str(sum))
     return sum
